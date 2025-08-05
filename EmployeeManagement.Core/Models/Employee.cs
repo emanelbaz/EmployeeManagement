@@ -33,6 +33,6 @@ namespace EmployeeManagement.Core.Models
         public string Email { get; set; }
         public DateTime HireDate { get; set; }
         public string DepartmentName { get; set; }
-        public string Status { get; set; } // Optional: Convert Enum to string
+        public string Status { get; set; } 
     }
 }
