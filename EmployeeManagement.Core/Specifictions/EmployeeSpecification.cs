@@ -10,17 +10,17 @@ namespace EmployeeManagement.Core.Specifictions
     public class EmployeeSpecification : BaseSpecifiction<Employee>
     {
         public EmployeeSpecification(
-            string name,
-            string department,
+            string? name,
+            string? department,
             EmployeeStatus? status,
             DateTime? from,
             DateTime? to,
-            string sortBy,
+            string? sortBy,
             bool desc,
-            int pageNumber,
-            int pageSize)
+            int pageNumber=1,
+            int pageSize=10)
         {
-            // فلترة
+            // filter
             Criteria = emp =>
                 (string.IsNullOrEmpty(name) || emp.Name.Contains(name)) &&
                 (string.IsNullOrEmpty(department) || emp.Department.Name.Contains(department)) &&
@@ -31,7 +31,7 @@ namespace EmployeeManagement.Core.Specifictions
             // Includes
             AddInclude(emp => emp.Department);
 
-            // ترتيب
+            // order
             if (!string.IsNullOrEmpty(sortBy))
             {
                 if (desc)
@@ -41,7 +41,6 @@ namespace EmployeeManagement.Core.Specifictions
             }
             else
             {
-                // ترتيب افتراضي حسب تاريخ التعيين تنازلي
                 AddorderByDesc(e => e.HireDate);
             }
 

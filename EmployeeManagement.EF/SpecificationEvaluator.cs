@@ -10,7 +10,6 @@ namespace Ecommece.EF.Data
         {
             var query = inputQuery;
 
-            // Apply where clause
             if (spec.Criteria != null)
             {
                 query = query.Where(spec.Criteria);
@@ -28,7 +27,6 @@ namespace Ecommece.EF.Data
             {
                 query = query.Skip(spec.Skip).Take(spec.Take);
             }
-            // Apply includes
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query;

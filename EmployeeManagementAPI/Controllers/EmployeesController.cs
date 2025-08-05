@@ -22,12 +22,12 @@ namespace EmployeeManagementAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetEmployees(
-            [FromQuery] string name,
-            [FromQuery] string department,
+            [FromQuery] string? name,
+            [FromQuery] string? department,
             [FromQuery] EmployeeStatus? status,
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to,
-            [FromQuery] string sortBy,
+            [FromQuery] string? sortBy,
             [FromQuery] bool desc,
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10)
@@ -48,7 +48,42 @@ namespace EmployeeManagementAPI.Controllers
             await _unitOfWork.Employees.AddAsync(employee);
             await _unitOfWork.SaveChangesAsync();
 
+            var log = new LogHistory
+            {
+                Action = "Create Employee",
+                Timestamp = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Logs.AddAsync(log);
+            await _unitOfWork.SaveChangesAsync();
+
             return Ok();
         }
+        [HttpPut]
+        public async Task<IActionResult> Update(EmployeeRequest request)
+        {
+            var existingEmployee = await _unitOfWork.Employees.GetByIdAsync(request.Id);
+            if (existingEmployee == null)
+            {
+                return NotFound($"Employee with ID {request.Id} not found.");
+            }
+
+            _mapper.Map(request, existingEmployee);
+
+            await _unitOfWork.Employees.UpdateAsync(existingEmployee);
+            await _unitOfWork.SaveChangesAsync();
+
+            var log = new LogHistory
+            {
+                Action = "Update Employee",                
+                Timestamp = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Logs.AddAsync(log);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok();
+        }
+
     }
 }
