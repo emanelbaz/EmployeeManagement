@@ -1,6 +1,7 @@
 using EmployeeManagement.Core.Interfaces;
 using EmployeeManagement.EF;
 using EmployeeManagement.EF.Repositories;
+using EmployeeManagementAPI.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -18,7 +19,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
