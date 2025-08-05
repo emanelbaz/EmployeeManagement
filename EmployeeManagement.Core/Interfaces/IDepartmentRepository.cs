@@ -11,5 +11,6 @@ namespace EmployeeManagement.Core.Interfaces
     {
         Task<IEnumerable<Department>> GetAllAsync();
         Task AddAsync(Department department);
+        public  Task<Department> GetByIdAsync(int id);
     }
 }

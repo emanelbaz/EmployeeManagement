@@ -1,4 +1,6 @@
-﻿using EmployeeManagement.Core.Enums;
+﻿using Ecommece.Core.Specifictions;
+using Ecommece.EF.Data;
+using EmployeeManagement.Core.Enums;
 using EmployeeManagement.Core.Interfaces;
 using EmployeeManagement.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,38 +23,12 @@ namespace EmployeeManagement.EF.Repositories
         {
            return await  _context.Employees.FindAsync(id);
         }
-       
 
 
-        public async Task<IEnumerable<Employee>> GetAllAsync(string name, string department, EmployeeStatus? status, DateTime? fromDate, DateTime? toDate, string sortBy, bool isDesc)
+
+        public async Task<IEnumerable<Employee>> GetAllWithSpecAsync(ISpecifiction<Employee> spec)
         {
-            var query = _context.Employees.Include(e => e.Department).AsQueryable();
-
-            if (!string.IsNullOrEmpty(name))
-                query = query.Where(e => e.Name.Contains(name));
-
-            if (!string.IsNullOrEmpty(department))
-                query = query.Where(e => e.Department.Name.Contains(department));
-
-            if (status.HasValue)
-                query = query.Where(e => e.Status == status.Value);
-
-            if (fromDate.HasValue)
-                query = query.Where(e => e.HireDate >= fromDate.Value);
-
-            if (toDate.HasValue)
-                query = query.Where(e => e.HireDate <= toDate.Value);
-
-            if (!string.IsNullOrEmpty(sortBy))
-            {
-                query = sortBy switch
-                {
-                    "name" => isDesc ? query.OrderByDescending(e => e.Name) : query.OrderBy(e => e.Name),
-                    "hireDate" => isDesc ? query.OrderByDescending(e => e.HireDate) : query.OrderBy(e => e.HireDate),
-                    _ => query
-                };
-            }
-
+            var query = SpecificationEvaluator<Employee>.GetQuery(_context.Employees.AsQueryable(), spec);
             return await query.ToListAsync();
         }
 

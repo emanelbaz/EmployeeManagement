@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Core.Enums;
+﻿using Ecommece.Core.Specifictions;
+using EmployeeManagement.Core.Enums;
 using EmployeeManagement.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace EmployeeManagement.Core.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task<IEnumerable<Employee>> GetAllAsync(string name, string department, EmployeeStatus? status, DateTime? from, DateTime? to, string sortBy, bool desc);
+        Task<IEnumerable<Employee>> GetAllWithSpecAsync(ISpecifiction<Employee> spec);
+        Task AddAsync(Employee employee);
         Task<Employee> GetByIdAsync(int id);
-        Task AddAsync(Employee emp);
         Task UpdateAsync(Employee emp);
         Task DeleteAsync(int id);
         
